@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Home - FoodHub{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="hero-section">
+        <h1>Welcome to FoodHub! 🍽️</h1>
+        <p>Order your favorite food from the best restaurants</p>
+    </div>
+
+    <div class="search-section">
+        <form method="GET" action="{{ url_for('search') }}" class="search-form">
+            <input type="text" name="q"
+                   placeholder="🔍 Search for food, category..."
+                   value="{{ search_term or '' }}"
+                   class="search-input">
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
+
+    {% if search_term %}
+    <div class="search-results-header">
+        <h2>Search Results for "{{ search_term }}"</h2>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Clear Search</a>
+    </div>
+    {% endif %}
+
+    <div class="food-items-container">
+        <div class="food-items-grid">
+            {% for item in items %}
+            <div class="food-card">
+                <div class="food-image">
+                    <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                    <button class="wishlist-btn"
+                            onclick="toggleWishlist({{ item.id }})"
+                            id="wish-{{ item.id }}">♡</button>
+                </div>
+                <div class="food-info">
+                    <h3>{{ item.name }}</h3>
+                    <p class="category">{{ item.category }}</p>
+                    <p class="description">{{ item.description[:50] }}...</p>
+                    <div class="food-footer">
+                        <span class="price">₹{{ item.price }}</span>
+                        <button class="btn btn-primary btn-small"
+                                onclick="addToCart({{ item.id }})">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="no-items">
+                <p>No food items found</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+function addToCart(foodId) {
+    fetch('/api/add-to-cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            food_id: foodId,
+            quantity: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Added to cart! 🛒');
+        } else {
+            alert('Failed to add to cart');
+        }
+    });
+}
+
+function toggleWishlist(foodId) {
+    const btn = document.getElementById('wish-' + foodId);
+
+    fetch(`/api/is-in-wishlist/${foodId}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.inWishlist) {
+            // Remove from wishlist
+            fetch('/api/remove-from-wishlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    food_id: foodId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    btn.classList.remove('in-wishlist');
+                    btn.textContent = '♡';
+                }
+            });
+        } else {
+            // Add to wishlist
+            fetch('/api/add-to-wishlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    food_id: foodId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    btn.classList.add('in-wishlist');
+                    btn.textContent = '♥';
+                }
+            });
+        }
+    });
+}
+
+// Initialize wishlist status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const foodCards = document.querySelectorAll('.food-card');
+    foodCards.forEach(card => {
+        const foodId = card.querySelector('.wishlist-btn').onclick.toString().match(/\d+/)[0];
+        fetch(`/api/is-in-wishlist/${foodId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.inWishlist) {
+                const btn = document.getElementById('wish-' + foodId);
+                btn.classList.add('in-wishlist');
+                btn.textContent = '♥';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

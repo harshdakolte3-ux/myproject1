@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - FoodHub{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+    <h1>📋 Checkout</h1>
+
+    <div class="checkout-content">
+        <div class="checkout-order-summary">
+            <h2>Order Summary</h2>
+            <div class="order-items-list">
+                {% for item in items %}
+                <div class="order-item">
+                    <span>{{ item.name }} x {{ item.quantity }}</span>
+                    <span>₹{{ item.price * item.quantity }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="order-total">
+                <span>Total Amount:</span>
+                <span>₹{{ total }}</span>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('place_order_route') }}" class="checkout-form">
+            <h2>Delivery Details</h2>
+
+            <div class="form-group">
+                <label for="customer_name">Full Name *</label>
+                <input type="text" id="customer_name" name="customer_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile_number">Mobile Number *</label>
+                <input type="tel" id="mobile_number" name="mobile_number"
+                       pattern="[0-9]{10}" placeholder="10-digit number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="city">City *</label>
+                <input type="text" id="city" name="city" required>
+            </div>
+
+            <div class="form-group">
+                <label for="payment_mode">Payment Mode *</label>
+                <select id="payment_mode" name="payment_mode" required>
+                    <option value="">Select Payment Mode</option>
+                    <option value="Cash">Cash on Delivery</option>
+                    <option value="Card">Credit/Debit Card</option>
+                    <option value="UPI">UPI</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ url_for('cart') }}" class="btn btn-secondary">Back to Cart</a>
+                <button type="submit" class="btn btn-primary btn-large">Place Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

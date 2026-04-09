@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Wishlist - FoodHub{% endblock %}
+
+{% block content %}
+<div class="wishlist-container">
+    <h1>❤️ My Wishlist</h1>
+
+    {% if items %}
+    <div class="wishlist-items-grid">
+        {% for item in items %}
+        <div class="food-card" id="wishlist-item-{{ item.id }}">
+            <div class="food-image">
+                <img src="{{ item.image_url }}" alt="{{ item.name }}">
+            </div>
+            <div class="food-info">
+                <h3>{{ item.name }}</h3>
+                <p class="description">{{ item.description[:50] }}...</p>
+                <div class="food-footer">
+                    <span class="price">₹{{ item.price }}</span>
+                    <div class="wishlist-actions">
+                        <button class="btn btn-primary btn-small"
+                                onclick="addToCartAndRemoveWishlist({{ item.id }})">
+                            Add to Cart
+                        </button>
+                        <button class="btn btn-danger btn-small"
+                                onclick="removeFromWishlist({{ item.id }})">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>❤️ Your wishlist is empty</p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Browse Items</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function removeFromWishlist(foodId) {
+    if (confirm('Remove from wishlist?')) {
+        fetch('/api/remove-from-wishlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                food_id: foodId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('wishlist-item-' + foodId).remove();
+                if (document.querySelectorAll('.food-card').length === 0) {
+                    location.reload();
+                }
+            }
+        });
+    }
+}
+
+function addToCartAndRemoveWishlist(foodId) {
+    fetch('/api/add-to-cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            food_id: foodId,
+            quantity: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Added to cart! 🛒');
+        }
+    });
+}
+</script>
+{% endblock %}

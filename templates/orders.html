@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders - FoodHub{% endblock %}
+
+{% block content %}
+<div class="orders-container">
+    <h1>📋 My Orders</h1>
+
+    {% if orders %}
+    <div class="orders-list">
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <h3>Order #{{ order.id }}</h3>
+                    <p class="order-date">{{ order.order_date }}</p>
+                </div>
+                <span class="order-total">₹{{ order.total_price }}</span>
+            </div>
+
+            <div class="order-items">
+                <p class="delivery-to">📍 Delivered to: {{ order.city }}</p>
+                <div class="items-summary">
+                    {% for item in order.items_list %}
+                    <p>{{ item.name }} x {{ item.quantity }} - ₹{{ item.total }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="order-footer">
+                <p><strong>Payment:</strong> {{ order.payment_mode }}</p>
+                <a href="{{ url_for('receipt', order_id=order.id) }}" class="btn btn-secondary btn-small">
+                    View Receipt
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>📋 No orders yet</p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Start Ordering</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

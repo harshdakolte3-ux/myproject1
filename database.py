@@ -1,0 +1,336 @@
+import sqlite3
+from datetime import datetime
+import os
+from werkzeug.security import generate_password_hash, check_password_hash
+
+DATABASE = 'data.db'
+
+def get_db():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    if os.path.exists(DATABASE):
+        os.remove(DATABASE)
+
+    conn = get_db()
+    c = conn.cursor()
+
+    # Users table
+    c.execute('''CREATE TABLE users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+
+    # Food items table
+    c.execute('''CREATE TABLE food_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        description TEXT,
+        price REAL NOT NULL,
+        image_url TEXT,
+        category TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+
+    # Cart table
+    c.execute('''CREATE TABLE cart (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        food_id INTEGER NOT NULL,
+        quantity INTEGER NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users (id),
+        FOREIGN KEY (food_id) REFERENCES food_items (id)
+    )''')
+
+    # Wishlist table
+    c.execute('''CREATE TABLE wishlist (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        food_id INTEGER NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users (id),
+        FOREIGN KEY (food_id) REFERENCES food_items (id)
+    )''')
+
+    # Orders table
+    c.execute('''CREATE TABLE orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        items TEXT NOT NULL,
+        total_price REAL NOT NULL,
+        customer_name TEXT NOT NULL,
+        city TEXT NOT NULL,
+        mobile_number TEXT NOT NULL,
+        payment_mode TEXT NOT NULL,
+        order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    )''')
+
+    # Insert 20 sample food items
+    food_items = [
+        ("Margherita Pizza", "Classic pizza with cheese and tomato", 299, "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=300&h=300&fit=crop", "Pizza"),
+        ("Pepperoni Pizza", "Pizza with pepperoni and cheese", 349, "https://images.unsplash.com/photo-1628840042765-356cda07f4ee?w=300&h=300&fit=crop", "Pizza"),
+        ("Vegetarian Burger", "Fresh veggies in a bun", 199, "https://images.unsplash.com/photo-1585617372265-a5ae3d1ad02c?w=300&h=300&fit=crop", "Burgers"),
+        ("Chicken Burger", "Grilled chicken patty burger", 249, "https://images.unsplash.com/photo-1562547256-f6f9c5c1dae1?w=300&h=300&fit=crop", "Burgers"),
+        ("Biryani", "Fragrant rice with chicken", 299, "https://images.unsplash.com/photo-1478201143081-80f7f84ca84d?w=300&h=300&fit=crop", "Rice"),
+        ("Fried Rice", "Stir-fried rice with vegetables", 199, "https://images.unsplash.com/photo-1609501676725-7186f017a4b8?w=300&h=300&fit=crop", "Rice"),
+        ("Chicken Tikka Masala", "Creamy curry with chicken", 349, "https://images.unsplash.com/photo-1565557623814-43db76f89c0b?w=300&h=300&fit=crop", "Curry"),
+        ("Paneer Butter Masala", "Rich paneer curry", 299, "https://images.unsplash.com/photo-1526231761103-f898f6e7cecd?w=300&h=300&fit=crop", "Curry"),
+        ("Tandoori Chicken", "Spiced grilled chicken", 349, "https://images.unsplash.com/photo-1565557623814-43db76f89c0b?w=300&h=300&fit=crop", "Grill"),
+        ("Garlic Naan", "Soft bread with garlic butter", 79, "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=300&fit=crop", "Bread"),
+        ("Coke", "Coca Cola 330ml", 49, "https://images.unsplash.com/photo-1554866585-c5c9a8b19a11?w=300&h=300&fit=crop", "Beverages"),
+        ("Sprite", "Sprite 330ml", 49, "https://images.unsplash.com/photo-1589985643662-4b090ec23247?w=300&h=300&fit=crop", "Beverages"),
+        ("Ice Cream", "Vanilla ice cream", 99, "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&h=300&fit=crop", "Desserts"),
+        ("Chocolate Cake", "Rich chocolate cake", 199, "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop", "Desserts"),
+        ("Samosa", "Crispy triangular pastry", 49, "https://images.unsplash.com/photo-1585457469293-fa476e9e0ca0?w=300&h=300&fit=crop", "Snacks"),
+        ("Chicken Wings", "Spicy chicken wings", 199, "https://images.unsplash.com/photo-1608039755401-742f15d70a8a?w=300&h=300&fit=crop", "Snacks"),
+        ("Fish Curry", "Spiced fish in gravy", 329, "https://images.unsplash.com/photo-1626973289835-39e1e0a0b3ba?w=300&h=300&fit=crop", "Curry"),
+        ("Mutton Curry", "Tender mutton pieces", 399, "https://images.unsplash.com/photo-1588200201387-d99a706c7d98?w=300&h=300&fit=crop", "Curry"),
+        ("Veggie Pasta", "Italian pasta with vegetables", 229, "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=300&h=300&fit=crop", "Pasta"),
+        ("Alfredo Pasta", "Creamy white pasta sauce", 259, "https://images.unsplash.com/photo-1645112411341-6c4ee32510d8?w=300&h=300&fit=crop", "Pasta"),
+    ]
+
+    c.executemany('INSERT INTO food_items (name, description, price, image_url, category) VALUES (?, ?, ?, ?, ?)', food_items)
+
+    conn.commit()
+    conn.close()
+
+def register_user(username, email, password):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        hashed_password = generate_password_hash(password)
+        c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+                  (username, email, hashed_password))
+        conn.commit()
+        conn.close()
+        return True, "Registration successful"
+    except sqlite3.IntegrityError as e:
+        return False, "Username or email already exists"
+    except Exception as e:
+        return False, str(e)
+
+def login_user(username, password):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('SELECT * FROM users WHERE username = ?', (username,))
+        user = c.fetchone()
+        conn.close()
+
+        if user and check_password_hash(user['password'], password):
+            return True, user['id']
+        else:
+            return False, None
+    except Exception as e:
+        return False, None
+
+def get_user(user_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('SELECT id, username, email FROM users WHERE id = ?', (user_id,))
+        user = c.fetchone()
+        conn.close()
+        return user
+    except:
+        return None
+
+def get_all_food_items(limit=20):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('SELECT * FROM food_items LIMIT ?', (limit,))
+        items = c.fetchall()
+        conn.close()
+        return items
+    except:
+        return []
+
+def search_food_items(search_term):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('SELECT * FROM food_items WHERE name LIKE ? OR category LIKE ? LIMIT 20',
+                  (f'%{search_term}%', f'%{search_term}%'))
+        items = c.fetchall()
+        conn.close()
+        return items
+    except:
+        return []
+
+def get_food_item(food_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('SELECT * FROM food_items WHERE id = ?', (food_id,))
+        item = c.fetchone()
+        conn.close()
+        return item
+    except:
+        return None
+
+def add_to_cart(user_id, food_id, quantity):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        # Check if item already in cart
+        c.execute('SELECT * FROM cart WHERE user_id = ? AND food_id = ?', (user_id, food_id))
+        existing = c.fetchone()
+
+        if existing:
+            c.execute('UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND food_id = ?',
+                      (quantity, user_id, food_id))
+        else:
+            c.execute('INSERT INTO cart (user_id, food_id, quantity) VALUES (?, ?, ?)',
+                      (user_id, food_id, quantity))
+
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        return False
+
+def remove_from_cart(user_id, food_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('DELETE FROM cart WHERE user_id = ? AND food_id = ?', (user_id, food_id))
+        conn.commit()
+        conn.close()
+        return True
+    except:
+        return False
+
+def update_cart_quantity(user_id, food_id, quantity):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        if quantity <= 0:
+            c.execute('DELETE FROM cart WHERE user_id = ? AND food_id = ?', (user_id, food_id))
+        else:
+            c.execute('UPDATE cart SET quantity = ? WHERE user_id = ? AND food_id = ?',
+                      (quantity, user_id, food_id))
+        conn.commit()
+        conn.close()
+        return True
+    except:
+        return False
+
+def get_cart_items(user_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('''SELECT c.id, f.id as food_id, f.name, f.price, c.quantity, f.image_url
+                     FROM cart c
+                     JOIN food_items f ON c.food_id = f.id
+                     WHERE c.user_id = ?''', (user_id,))
+        items = c.fetchall()
+        conn.close()
+        return items
+    except:
+        return []
+
+def clear_cart(user_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('DELETE FROM cart WHERE user_id = ?', (user_id,))
+        conn.commit()
+        conn.close()
+        return True
+    except:
+        return False
+
+def add_to_wishlist(user_id, food_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('INSERT OR IGNORE INTO wishlist (user_id, food_id) VALUES (?, ?)',
+                  (user_id, food_id))
+        conn.commit()
+        conn.close()
+        return True
+    except:
+        return False
+
+def remove_from_wishlist(user_id, food_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('DELETE FROM wishlist WHERE user_id = ? AND food_id = ?', (user_id, food_id))
+        conn.commit()
+        conn.close()
+        return True
+    except:
+        return False
+
+def get_wishlist(user_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('''SELECT f.id, f.name, f.price, f.image_url, f.description
+                     FROM wishlist w
+                     JOIN food_items f ON w.food_id = f.id
+                     WHERE w.user_id = ?''', (user_id,))
+        items = c.fetchall()
+        conn.close()
+        return items
+    except:
+        return []
+
+def is_in_wishlist(user_id, food_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('SELECT * FROM wishlist WHERE user_id = ? AND food_id = ?', (user_id, food_id))
+        item = c.fetchone()
+        conn.close()
+        return item is not None
+    except:
+        return False
+
+def place_order(user_id, items, total_price, customer_name, city, mobile_number, payment_mode):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        import json
+        items_json = json.dumps(items)
+        c.execute('''INSERT INTO orders (user_id, items, total_price, customer_name, city, mobile_number, payment_mode)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                  (user_id, items_json, total_price, customer_name, city, mobile_number, payment_mode))
+        conn.commit()
+
+        # Get the order ID
+        order_id = c.lastrowid
+        conn.close()
+        return True, order_id
+    except Exception as e:
+        print(f"Error placing order: {e}")
+        return False, None
+
+def get_orders(user_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('''SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC''', (user_id,))
+        orders = c.fetchall()
+        conn.close()
+        return orders
+    except:
+        return []
+
+def get_order(order_id):
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('SELECT * FROM orders WHERE id = ?', (order_id,))
+        order = c.fetchone()
+        conn.close()
+        return order
+    except:
+        return None

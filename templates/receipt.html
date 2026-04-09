@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Order Receipt - FoodHub{% endblock %}
+
+{% block content %}
+<div class="receipt-container">
+    <div class="receipt-box">
+        <div class="receipt-header">
+            <h1>✅ Order Placed Successfully!</h1>
+            <p class="order-id">Order ID: #{{ order.id }}</p>
+            <p class="order-date">{{ order.order_date }}</p>
+        </div>
+
+        <div class="receipt-content">
+            <div class="receipt-section">
+                <h3>📦 Order Details</h3>
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td>₹{{ item.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="receipt-section">
+                <h3>🏠 Delivery Address</h3>
+                <p><strong>Name:</strong> {{ order.customer_name }}</p>
+                <p><strong>City:</strong> {{ order.city }}</p>
+                <p><strong>Mobile:</strong> {{ order.mobile_number }}</p>
+            </div>
+
+            <div class="receipt-section">
+                <h3>💳 Payment Method</h3>
+                <p>{{ order.payment_mode }}</p>
+            </div>
+
+            <div class="receipt-summary">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>₹{{ order.total_price }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Charge:</span>
+                    <span>₹0</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total Amount:</span>
+                    <span>₹{{ order.total_price }}</span>
+                </div>
+            </div>
+
+            <div class="receipt-footer">
+                <p class="thank-you">Thank you for your order! 🙏</p>
+                <p class="delivery-status">Your order will be delivered within 30-45 minutes</p>
+            </div>
+        </div>
+
+        <div class="receipt-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Continue Shopping</a>
+            <a href="{{ url_for('orders') }}" class="btn btn-secondary">View All Orders</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
