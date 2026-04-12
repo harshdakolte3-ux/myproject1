@@ -1,5 +1,5 @@
 // Main JavaScript file for FoodHub
-
+//new commit//
 // Dark mode toggle
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
