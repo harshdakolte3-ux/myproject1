@@ -72,7 +72,7 @@ def init_db():
 
     # Insert 20 sample food items
     food_items = [
-        ("Margherita Pizza", "Classic pizza with cheese and tomato", 299, "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=300&h=300&fit=crop", "Pizza"),
+        
         ("Pepperoni Pizza", "Pizza with pepperoni and cheese", 349, "https://images.unsplash.com/photo-1628840042765-356cda07f4ee?w=300&h=300&fit=crop", "Pizza"),
         ("Vegetarian Burger", "Fresh veggies in a bun", 199, "https://images.unsplash.com/photo-1585617372265-a5ae3d1ad02c?w=300&h=300&fit=crop", "Burgers"),
         ("Chicken Burger", "Grilled chicken patty burger", 249, "https://images.unsplash.com/photo-1562547256-f6f9c5c1dae1?w=300&h=300&fit=crop", "Burgers"),
