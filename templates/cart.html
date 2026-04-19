@@ -12,62 +12,103 @@
             {% for item in items %}
             <div class="cart-item" id="cart-item-{{ item.food_id }}">
                 <img src="{{ item.image_url }}" alt="{{ item.name }}" class="cart-item-image">
+
                 <div class="cart-item-details">
                     <h3>{{ item.name }}</h3>
-                    <p class="price">₹{{ item.price }}</p>
+                    <p class="price"
+                       id="price-{{ item.food_id }}"
+                       data-price="{{ item.price }}">
+                        ₹{{ item.price }}
+                    </p>
                 </div>
 
                 <div class="quantity-control">
                     <button onclick="decreaseQuantity({{ item.food_id }})">-</button>
-                    <input type="number" value="{{ item.quantity }}" readonly class="qty-input" id="qty-{{ item.food_id }}">
+                    <input type="number"
+                           value="{{ item.quantity }}"
+                           readonly
+                           class="qty-input"
+                           id="qty-{{ item.food_id }}">
                     <button onclick="increaseQuantity({{ item.food_id }})">+</button>
                 </div>
 
                 <div class="item-total">
-                    <p>₹<span id="total-{{ item.food_id }}">{{ item.price * item.quantity }}</span></p>
+                    <p>₹<span id="total-{{ item.food_id }}">
+                        {{ item.price * item.quantity }}
+                    </span></p>
                 </div>
 
-                <button class="btn-remove" onclick="removeFromCart({{ item.food_id }})">🗑️</button>
+                <button class="btn-remove"
+                        onclick="removeFromCart({{ item.food_id }})">
+                        🗑️
+                </button>
             </div>
             {% endfor %}
         </div>
 
         <div class="cart-summary">
             <h2>Order Summary</h2>
+
             <div class="summary-row">
                 <span>Subtotal:</span>
                 <span>₹<span id="subtotal">{{ total }}</span></span>
             </div>
+
             <div class="summary-row">
                 <span>Delivery:</span>
                 <span>₹0</span>
             </div>
+
             <div class="summary-row total-row">
                 <span>Total:</span>
                 <span>₹<span id="grand-total">{{ total }}</span></span>
             </div>
-            <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-block">Proceed to Order</a>
-            <a href="{{ url_for('index') }}" class="btn btn-secondary btn-block">Continue Shopping</a>
+
+            <a href="{{ url_for('checkout') }}"
+               class="btn btn-primary btn-block">
+               Proceed to Order
+            </a>
+
+            <a href="{{ url_for('index') }}"
+               class="btn btn-secondary btn-block">
+               Continue Shopping
+            </a>
         </div>
     </div>
+
     {% else %}
     <div class="empty-cart">
         <p>🛒 Your cart is empty</p>
-        <a href="{{ url_for('index') }}" class="btn btn-primary">Start Shopping</a>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            Start Shopping
+        </a>
     </div>
     {% endif %}
 </div>
 
 <script>
-function updateTotal(foodId) {
+
+function updateItemTotal(foodId) {
     const qty = parseInt(document.getElementById('qty-' + foodId).value);
-    const price = {{ total / (items|length) if items else 0 }};
-    // Get actual price from DOM or make API call
-    fetch(`/api/get-item/${foodId}`)
-    .catch(() => {
-        // If API not available, recalculate from cart
-        location.reload();
+    const price = parseFloat(
+        document.getElementById('price-' + foodId).dataset.price
+    );
+
+    const itemTotal = qty * price;
+    document.getElementById('total-' + foodId).innerText = itemTotal;
+
+    updateGrandTotal();
+}
+
+function updateGrandTotal() {
+    let grandTotal = 0;
+
+    document.querySelectorAll('[id^="total-"]').forEach(el => {
+        grandTotal += parseFloat(el.innerText);
     });
+
+    document.getElementById('subtotal').innerText = grandTotal;
+    document.getElementById('grand-total').innerText = grandTotal;
 }
 
 function increaseQuantity(foodId) {
@@ -79,6 +120,7 @@ function increaseQuantity(foodId) {
 function decreaseQuantity(foodId) {
     const qtyInput = document.getElementById('qty-' + foodId);
     const newQty = parseInt(qtyInput.value) - 1;
+
     if (newQty > 0) {
         updateQuantity(foodId, newQty);
     }
@@ -87,9 +129,7 @@ function decreaseQuantity(foodId) {
 function updateQuantity(foodId, quantity) {
     fetch('/api/update-cart-quantity', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             food_id: foodId,
             quantity: quantity
@@ -98,7 +138,8 @@ function updateQuantity(foodId, quantity) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            location.reload();
+            document.getElementById('qty-' + foodId).value = quantity;
+            updateItemTotal(foodId);
         }
     });
 }
@@ -107,20 +148,19 @@ function removeFromCart(foodId) {
     if (confirm('Remove this item from cart?')) {
         fetch('/api/remove-from-cart', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                food_id: foodId
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ food_id: foodId })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                document.getElementById('cart-item-' + foodId).remove();
+                updateGrandTotal();
             }
         });
     }
 }
+
 </script>
+
 {% endblock %}
