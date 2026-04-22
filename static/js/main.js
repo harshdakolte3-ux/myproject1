@@ -67,4 +67,4 @@ document.addEventListener('keypress', function(e) {
     }
 });
 
-console.log('FoodHub JavaScript loaded successfully');
+console.log('FoodHub JavaScript is loaded successfully');
