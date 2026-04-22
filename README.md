@@ -1,310 +1,325 @@
-# FoodHub - Online Food Ordering System
+# 🍽️ FoodHub — Online Food Ordering System
 
-A complete web-based food ordering system built with Flask, HTML, CSS, JavaScript, and SQLite.
+<div align="center">
 
-## Features Implemented
+![FoodHub Banner](https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=400&fit=crop)
 
-### 1. User Authentication
-- ✅ Registration page with password validation
-- ✅ Login page with secure password hashing
-- ✅ Redirect to dashboard after successful login
-- ✅ Logout functionality
+[![Python](https://img.shields.io/badge/Python-3.7+-blue?style=for-the-badge&logo=python)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-2.x-black?style=for-the-badge&logo=flask)](https://flask.palletsprojects.com)
+[![SQLite](https://img.shields.io/badge/SQLite-3-blue?style=for-the-badge&logo=sqlite)](https://sqlite.org)
+[![HTML5](https://img.shields.io/badge/HTML5-CSS3-orange?style=for-the-badge&logo=html5)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 
-### 2. Home/Dashboard Page
-- ✅ Display exactly 20 food items
-- ✅ Each item shows image, name, and price
-- ✅ Dynamic search bar to filter items
-- ✅ Navigation bar with Home, Cart, Wishlist, Orders
+> A full-stack food ordering web application inspired by Swiggy/Zomato — built with Flask, SQLite, HTML, CSS, and JavaScript.
 
-### 3. Cart System
-- ✅ Add items to cart
-- ✅ Increase/decrease item quantities
-- ✅ Remove items from cart
-- ✅ Dynamic total price calculation
-- ✅ Cart summary
-
-### 4. Wishlist
-- ✅ Add/remove items to/from wishlist
-- ✅ Display wishlist items separately
-- ✅ Quick add to cart from wishlist
-
-### 5. Order Process
-- ✅ Checkout page with order summary
-- ✅ Form to collect delivery details:
-  - Customer name
-  - City
-  - Mobile number
-  - Payment mode (Cash/Card/UPI)
-- ✅ Order validation
-
-### 6. Order Receipt
-- ✅ Order confirmation with receipt details
-- ✅ Order ID and order date
-- ✅ Item-wise breakdown with quantities and prices
-- ✅ Total amount display
-
-### 7. Order History
-- ✅ Orders page showing all previous orders
-- ✅ View receipt for each order
-- ✅ Order summary with delivery details
-
-### 8. Database
-- ✅ SQLite3 database with tables for:
-  - Users (authentication)
-  - Food items (menu)
-  - Cart (temporary cart storage)
-  - Wishlist (saved items)
-  - Orders (order history)
-
-### 9. UI/UX
-- ✅ Modern, clean design inspired by Swiggy/Zomato
-- ✅ Responsive design for mobile and desktop
-- ✅ Dark mode toggle
-- ✅ Smooth transitions and hover effects
-- ✅ Gradient backgrounds and card-based layout
-
-### 10. Backend
-- ✅ Flask routing for all pages
-- ✅ Proper template inheritance with base.html
-- ✅ Session management for user authentication
-- ✅ AJAX requests for add/remove/update actions
-- ✅ JSON API endpoints
-
-## Project Structure
-
-```
-foodhub/
-├── app.py                  # Main Flask application
-├── database.py             # Database initialization and functions
-├── requirements.txt        # Python dependencies
-├── templates/
-│   ├── base.html          # Base template with navbar
-│   ├── login.html         # Login page
-│   ├── register.html      # Registration page
-│   ├── index.html         # Home/Dashboard
-│   ├── cart.html          # Shopping cart
-│   ├── wishlist.html      # Wishlist page
-│   ├── checkout.html      # Checkout form
-│   ├── receipt.html       # Order receipt
-│   └── orders.html        # Order history
-└── static/
-    ├── css/
-    │   └── style.css      # All styles (responsive, dark mode)
-    └── js/
-        └── main.js        # JavaScript utilities
-```
-
-## Installation & Setup
-
-### Prerequisites
-- Python 3.7+
-- pip (Python package manager)
-
-### Steps
-
-1. **Navigate to project directory:**
-   ```bash
-   cd /path/to/timepas
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the application:**
-   ```bash
-   python app.py
-   ```
-
-4. **Open in browser:**
-   Open `http://localhost:5000` in your web browser
-
-5. **Create account:**
-   - Click "Register here" on the login page
-   - Fill in username, email, and password
-   - Login with your credentials
-
-## Default Credentials (After DB Initialization)
-You'll be redirected to create new credentials on first run.
-
-## Features in Detail
-
-### Authentication System
-- Passwords are hashed using Werkzeug security
-- Session-based authentication
-- Automatic redirect to login if not authenticated
-
-### Food Items
-The system comes pre-loaded with 20 diverse food items including:
-- Pizzas (Margherita, Pepperoni)
-- Burgers (Vegetarian, Chicken)
-- Indian cuisine (Biryani, Curries, Tandoori)
-- Beverages
-- Desserts
-- Snacks
-
-### Cart Management
-- Items stored in SQLite database
-- Real-time quantity updates
-- Automatic total calculation
-- Persistent across sessions (until order placed)
-
-### Order System
-- Complete order placed with delivery details
-- Payment mode selection (Cash/Card/UPI)
-- Mobile number validation (10 digits)
-- Order history with filtering
-
-### Search Functionality
-- Real-time search by food name
-- Category-based filtering
-- Limits results to 20 items
-
-### Dark Mode
-- Toggle dark mode with button in navbar
-- Preference saved in browser localStorage
-- Smooth transitions between modes
-
-## Database Schema
-
-### Users Table
-- id (PRIMARY KEY)
-- username (UNIQUE)
-- email (UNIQUE)
-- password (hashed)
-- created_at
-
-### Food Items Table
-- id (PRIMARY KEY)
-- name
-- description
-- price
-- image_url
-- category
-- created_at
-
-### Cart Table
-- id (PRIMARY KEY)
-- user_id (FOREIGN KEY)
-- food_id (FOREIGN KEY)
-- quantity
-
-### Wishlist Table
-- id (PRIMARY KEY)
-- user_id (FOREIGN KEY)
-- food_id (FOREIGN KEY)
-
-### Orders Table
-- id (PRIMARY KEY)
-- user_id (FOREIGN KEY)
-- items (JSON)
-- total_price
-- customer_name
-- city
-- mobile_number
-- payment_mode
-- order_date
-
-## Responsive Design
-
-The application is fully responsive and works on:
-- Desktop (1200px+)
-- Tablet (768px - 1199px)
-- Mobile (below 768px)
-
-## Validation
-
-### Login/Register
-- Username and email validation
-- Password matching confirmation
-- Duplicate account prevention
-
-### Checkout
-- Name required
-- Valid phone number (10 digits)
-- City required
-- Payment mode required
-
-## API Endpoints
-
-### Authentication
-- `POST /login` - User login
-- `POST /register` - User registration
-- `GET /logout` - User logout
-
-### Pages
-- `GET /` - Home/Dashboard
-- `GET /cart` - Cart page
-- `GET /wishlist` - Wishlist page
-- `GET /checkout` - Checkout page
-- `GET /orders` - Order history
-- `GET /search` - Search results
-
-### AJAX API
-- `POST /api/add-to-cart` - Add item to cart
-- `POST /api/remove-from-cart` - Remove from cart
-- `POST /api/update-cart-quantity` - Update quantity
-- `POST /api/add-to-wishlist` - Add to wishlist
-- `POST /api/remove-from-wishlist` - Remove from wishlist
-- `GET /api/is-in-wishlist/<id>` - Check if in wishlist
-- `POST /place-order` - Place order
-
-## Troubleshooting
-
-### Database Issues
-If you encounter database errors:
-```bash
-rm data.db
-python app.py
-```
-This will reinitialize the database with fresh data.
-
-### Port Already in Use
-If port 5000 is already in use, modify `app.py`:
-```python
-if __name__ == '__main__':
-    app.run(debug=True, port=5001)  # Change port number
-```
-
-### Static Files Not Loading
-Ensure the directory structure is correct:
-- `static/css/style.css` exists
-- `static/js/main.js` exists
-- `templates/` has all HTML files
-
-## Future Enhancements
-
-Potential features for expansion:
-- Email notifications for orders
-- Restaurant ratings and reviews
-- Delivery tracking
-- Promo codes and discounts
-- Multiple restaurants
-- Admin panel for food management
-- Payment gateway integration
-- Order delivery estimation
-
-## Security Notes
-
-For production:
-- Change the `app.secret_key` to a secure random string
-- Use environment variables for sensitive data
-- Enable HTTPS
-- Add CSRF protection
-- Use a production WSGI server (Gunicorn)
-- Implement rate limiting
-
-## License
-
-This project is for educational purposes.
-
-## Support
-
-For issues or questions about the application, review the code comments or check individual files for more details.
+</div>
 
 ---
 
-**Created:** April 8, 2024
-**Version:** 1.0
-**Status:** Fully Functional ✅
+## 📽️ Project Demo Video
+
+> **▶️ [Click here to watch the project demo video](YOUR_VIDEO_LINK_HERE)**
+>
+> *(Replace `YOUR_VIDEO_LINK_HERE` with your YouTube / Google Drive / Loom video link)*
+
+<!-- If you want to embed a YouTube video thumbnail that links to the video, use this format: -->
+<!-- [![FoodHub Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID) -->
+
+---
+
+## 📌 Project Description
+
+**FoodHub** is a complete web-based food ordering system that allows users to:
+
+- 🔐 Register and log in securely
+- 🍕 Browse 20+ food items across multiple categories
+- 🛒 Add items to cart and manage quantities
+- ❤️ Save favourite items to a wishlist
+- 📦 Place orders with delivery details and payment mode
+- 🧾 View order receipts and full order history
+- 🌙 Toggle between light and dark mode
+
+The project follows a clean MVC-like structure using Flask for backend routing, SQLite for persistent data storage, and vanilla JavaScript for dynamic frontend interactions.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer      | Technology                        |
+|------------|-----------------------------------|
+| Backend    | Python 3, Flask                   |
+| Database   | SQLite3                           |
+| Frontend   | HTML5, CSS3, JavaScript (vanilla) |
+| Auth       | Werkzeug password hashing         |
+| Templating | Jinja2 (Flask templates)          |
+
+---
+
+## 📁 Project Structure
+
+```
+foodhub/
+├── app.py                  # Main Flask application & routes
+├── database.py             # DB init, schema & all query functions
+├── requirements.txt        # Python dependencies
+├── data.db                 # SQLite database (auto-generated)
+├── templates/
+│   ├── base.html           # Base layout with navbar
+│   ├── login.html          # Login page
+│   ├── register.html       # Registration page
+│   ├── index.html          # Home / food listing
+│   ├── cart.html           # Shopping cart
+│   ├── wishlist.html       # Wishlist page
+│   ├── checkout.html       # Checkout form
+│   ├── receipt.html        # Order receipt
+│   └── orders.html         # Order history
+└── static/
+    ├── css/
+    │   └── style.css       # All styles (responsive + dark mode)
+    └── js/
+        └── main.js         # JS utilities
+```
+
+---
+
+## ⚙️ Steps to Run the Project
+
+### ✅ Prerequisites
+- Python 3.7 or higher installed
+- pip (Python package manager)
+- Git (to clone the repository)
+
+---
+
+### Step 1 — Clone the Repository
+
+```bash
+git clone https://github.com/harshdakolte3-ux/myproject1.git
+cd myproject1
+```
+
+> Replace `YOUR_USERNAME` with your actual GitHub username.
+
+---
+
+### Step 2 — (Optional) Create a Virtual Environment
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Mac / Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
+### Step 3 — Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+The `requirements.txt` includes:
+```
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+Werkzeug==3.0.0
+```
+
+---
+
+### Step 4 — Run the Application
+
+```bash
+python app.py
+```
+
+You should see:
+```
+* Running on http://127.0.0.1:5000
+* Debug mode: on
+```
+
+---
+
+### Step 5 — Open in Browser
+
+Go to 👉 **[http://localhost:5000](http://127.0.0.1:5000)**
+
+- Click **"Register here"** to create a new account
+- Login with your credentials
+- Start browsing and ordering food! 🎉
+
+---
+
+### 🔄 Reset the Database (if needed)
+
+If you face any database errors or want a fresh start:
+
+```bash
+# Windows
+del data.db
+
+# Mac / Linux
+rm data.db
+```
+
+Then restart the app — it will auto-recreate the database with all 20 food items.
+
+---
+
+### 🔧 Change Port (if 5000 is busy)
+
+Edit the last line of `app.py`:
+```python
+app.run(debug=True, port=5001)  # Use any available port
+```
+
+---
+
+## 👥 Team Member Contributions
+
+
+
+### 👩‍💻 Harshda Kolte — Project Lead & Full Stack Developer
+- Led overall project architecture and development
+- Implemented backend and frontend using Flask, HTML, CSS, and JavaScript
+- Designed database structure
+- Built order placement logic and APIs
+- Implemented dark mode
+- Created HTML templates and documentation
+
+### 👩‍💻 Purva Naik — Database Developer & UI Designer
+- Managed database design and queries
+- Seeded 20 food items
+- Worked on UI/UX and responsive design
+- Implemented CSS styling and validation
+- Tested usability
+
+### 👩‍💻 Hetvi — Backend & Feature Developer
+- Implemented session management
+- Developed routing logic
+- Built wishlist system
+- Worked on APIs and search feature
+- Fixed bugs and did cross-browser testing
+
+
+---
+
+## ✨ Features
+
+### 🔐 Authentication
+- Secure registration with password confirmation
+- Login with hashed password verification (Werkzeug)
+- Session-based login state
+- Auto-redirect to login if not authenticated
+
+### 🏠 Home / Dashboard
+- Displays 20 food items in a responsive grid
+- Each card shows image, name, category, description, and price
+- Search bar filters by food name or category
+
+### 🛒 Cart
+- Add items with quantity management
+- Increase / decrease / remove items
+- Real-time total price calculation
+- Persisted in database across sessions
+
+### ❤️ Wishlist
+- Toggle wishlist from food cards (heart button)
+- Separate wishlist page
+- Quick "Add to Cart" from wishlist
+
+### 📦 Order & Checkout
+- Delivery form: name, city, mobile, payment mode
+- Supports Cash / Card / UPI
+- Mobile number validation (10 digits)
+
+### 🧾 Receipt & Order History
+- Confirmation page with order ID and date
+- Item-wise breakdown with quantities and totals
+- Full order history page
+
+### 🌙 Dark Mode
+- Toggle from navbar
+- Preference saved in `localStorage`
+
+---
+
+## 🗃️ Database Schema
+
+```
+users        → id, username, email, password, created_at
+food_items   → id, name, description, price, image_url, category, created_at
+cart         → id, user_id, food_id, quantity
+wishlist     → id, user_id, food_id
+orders       → id, user_id, items (JSON), total_price, customer_name,
+               city, mobile_number, payment_mode, order_date
+```
+
+---
+
+## 🌐 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Home page |
+| GET | `/search?q=term` | Search food items |
+| POST | `/login` | User login |
+| POST | `/register` | User registration |
+| GET | `/logout` | Logout |
+| GET | `/cart` | Cart page |
+| GET | `/wishlist` | Wishlist page |
+| GET | `/checkout` | Checkout page |
+| POST | `/place-order` | Submit order |
+| GET | `/receipt/<id>` | Order receipt |
+| GET | `/orders` | Order history |
+| POST | `/api/add-to-cart` | Add item to cart |
+| POST | `/api/remove-from-cart` | Remove from cart |
+| POST | `/api/update-cart-quantity` | Update quantity |
+| POST | `/api/toggle-wishlist` | Add/remove wishlist |
+| GET | `/api/wishlist-status/<id>` | Check wishlist status |
+
+---
+
+## 🚀 Future Enhancements
+
+- 📧 Email order confirmations
+- ⭐ Restaurant ratings and reviews
+- 🗺️ Live delivery tracking
+- 🏷️ Promo codes and discounts
+- 🔑 Admin panel for food management
+- 💳 Payment gateway integration
+
+---
+
+## 🔒 Security Notes (for Production)
+
+- Change `app.secret_key` to a secure random string
+- Use environment variables for all secrets
+- Enable HTTPS / SSL
+- Add CSRF protection
+- Use a WSGI server like **Gunicorn**
+- Implement rate limiting on API routes
+
+---
+
+## 📄 License
+
+This project is developed for **educational purposes** as part of an academic submission.
+
+---
+
+## 🔗 GitHub Repository
+
+> **[https://github.com/harshdakolte3-ux/myproject1](https://github.com/harshdakolte3-ux/myproject1)**
+
+---
+
+<div align="center">
+
+Made with ❤️ by the FoodHub Team &nbsp;|&nbsp; Version 1.0 &nbsp;|&nbsp; Status: ✅ Fully Functional
+
+</div>

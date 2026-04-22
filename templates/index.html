@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-<!--index file  updated-->
+<!--index file updated-->
+
 {% block title %}Home - FoodHub{% endblock %}
 
 {% block content %}
@@ -31,7 +32,9 @@
             {% for item in items %}
             <div class="food-card">
                 <div class="food-image">
-                    <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                    <!-- ✅ FIXED IMAGE PATH -->
+                    <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{ item.name }}">
+                    
                     <button class="wishlist-btn"
                             onclick="toggleWishlist({{ item.id }})"
                             id="wish-{{ item.id }}">♡</button>
@@ -87,7 +90,6 @@ function toggleWishlist(foodId) {
     .then(response => response.json())
     .then(data => {
         if (data.inWishlist) {
-            // Remove from wishlist
             fetch('/api/remove-from-wishlist', {
                 method: 'POST',
                 headers: {
@@ -105,7 +107,6 @@ function toggleWishlist(foodId) {
                 }
             });
         } else {
-            // Add to wishlist
             fetch('/api/add-to-wishlist', {
                 method: 'POST',
                 headers: {
@@ -126,7 +127,6 @@ function toggleWishlist(foodId) {
     });
 }
 
-// Initialize wishlist status on page load
 document.addEventListener('DOMContentLoaded', function() {
     const foodCards = document.querySelectorAll('.food-card');
     foodCards.forEach(card => {
@@ -143,4 +143,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endblock %}
+{% endblock %}<!--  -->

@@ -11,9 +11,21 @@ import os
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here_change_in_production'
 
-# ✅ FIXED DATABASE INIT
-if not os.path.exists('data.db'):
-    init_db()
+# ✅ FIX 1: Always reinitialize DB to pick up latest image URLs
+# Change this to `if not os.path.exists('data.db'):` once images are confirmed working
+init_db()
+
+# ✅ FIX 2: Allow external images (Unsplash) via Content Security Policy
+@app.after_request
+def add_security_headers(response):
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "img-src * data: blob:; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
+        "font-src 'self' https://fonts.gstatic.com;"
+    )
+    return response
 
 # Middleware to check login
 def check_login():
@@ -107,7 +119,7 @@ def api_remove_from_cart():
     success = remove_from_cart(session['user_id'], food_id)
     return jsonify({'success': success})
 
-# Update cart
+# Update cart quantity
 @app.route('/api/update-cart-quantity', methods=['POST'])
 def api_update_cart_quantity():
     if not check_login():
@@ -119,6 +131,23 @@ def api_update_cart_quantity():
 
     success = update_cart_quantity(session['user_id'], food_id, quantity)
     return jsonify({'success': success})
+
+# ✅ FIX 3: Wishlist toggle API (was missing)
+@app.route('/api/toggle-wishlist', methods=['POST'])
+def api_toggle_wishlist():
+    if not check_login():
+        return jsonify({'success': False}), 401
+
+    data = request.get_json()
+    food_id = data.get('food_id')
+    user_id = session['user_id']
+
+    if is_in_wishlist(user_id, food_id):
+        success = remove_from_wishlist(user_id, food_id)
+        return jsonify({'success': success, 'in_wishlist': False})
+    else:
+        success = add_to_wishlist(user_id, food_id)
+        return jsonify({'success': success, 'in_wishlist': True})
 
 # Cart page
 @app.route('/cart')
@@ -202,8 +231,10 @@ def receipt(order_id):
         return redirect(url_for('login'))
 
     order = get_order(order_id)
-    user = get_user(session['user_id'])
+    if not order:
+        return redirect(url_for('orders'))
 
+    user = get_user(session['user_id'])
     items = json.loads(order['items']) if order['items'] else []
 
     return render_template('receipt.html', order=order, items=items, user=user)

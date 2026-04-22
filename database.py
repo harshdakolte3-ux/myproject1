@@ -72,26 +72,26 @@ def init_db():
 
     # Insert 20 sample food items
     food_items = [
-        
-        ("Pepperoni Pizza", "Pizza with pepperoni and cheese", 349, "https://images.unsplash.com/photo-1628840042765-356cda07f4ee", "Pizza"),
-        ("Vegetarian Burger", "Fresh veggies in a bun", 199, "https://images.unsplash.com/photo-1585617372265-a5ae3d1ad02c?w=300&h=300&fit=crop", "Burgers"),
-        ("Chicken Burger", "Grilled chicken patty burger", 249, "https://images.unsplash.com/photo-1562547256-f6f9c5c1dae1?w=300&h=300&fit=crop", "Burgers"),
-        ("Biryani", "Fragrant rice with chicken", 299, "https://images.unsplash.com/photo-1478201143081-80f7f84ca84d?w=300&h=300&fit=crop", "Rice"),
-        ("Fried Rice", "Stir-fried rice with vegetables", 199, "https://images.unsplash.com/photo-1609501676725-7186f017a4b8?w=300&h=300&fit=crop", "Rice"),
-        ("Chicken Tikka Masala", "Creamy curry with chicken", 349, "https://images.unsplash.com/photo-1565557623814-43db76f89c0b?w=300&h=300&fit=crop", "Curry"),
-        ("Paneer Butter Masala", "Rich paneer curry", 299, "https://images.unsplash.com/photo-1526231761103-f898f6e7cecd?w=300&h=300&fit=crop", "Curry"),
-        ("Tandoori Chicken", "Spiced grilled chicken", 349, "https://images.unsplash.com/photo-1565557623814-43db76f89c0b?w=300&h=300&fit=crop", "Grill"),
-        ("Garlic Naan", "Soft bread with garlic butter", 79, "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=300&fit=crop", "Bread"),
-        ("Coke", "Coca Cola 330ml", 49, "https://images.unsplash.com/photo-1554866585-c5c9a8b19a11?w=300&h=300&fit=crop", "Beverages"),
-        ("Sprite", "Sprite 330ml", 49, "https://images.unsplash.com/photo-1589985643662-4b090ec23247?w=300&h=300&fit=crop", "Beverages"),
-        ("Ice Cream", "Vanilla ice cream", 99, "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&h=300&fit=crop", "Desserts"),
-        ("Chocolate Cake", "Rich chocolate cake", 199, "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop", "Desserts"),
-        ("Samosa", "Crispy triangular pastry", 49, "https://images.unsplash.com/photo-1585457469293-fa476e9e0ca0?w=300&h=300&fit=crop", "Snacks"),
-        ("Chicken Wings", "Spicy chicken wings", 199, "https://images.unsplash.com/photo-1608039755401-742f15d70a8a?w=300&h=300&fit=crop", "Snacks"),
-        ("Fish Curry", "Spiced fish in gravy", 329, "https://images.unsplash.com/photo-1626973289835-39e1e0a0b3ba?w=300&h=300&fit=crop", "Curry"),
-        ("Mutton Curry", "Tender mutton pieces", 399, "https://images.unsplash.com/photo-1588200201387-d99a706c7d98?w=300&h=300&fit=crop", "Curry"),
-        ("Veggie Pasta", "Italian pasta with vegetables", 229, "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=300&h=300&fit=crop", "Pasta"),
-        ("Alfredo Pasta", "Creamy white pasta sauce", 259, "https://images.unsplash.com/photo-1645112411341-6c4ee32510d8?w=300&h=300&fit=crop", "Pasta"),
+    ("Pepperoni Pizza", "Pizza with pepperoni and cheese", 349, "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=300&h=300&fit=crop", "Pizza"),
+    ("Vegetarian Burger", "Fresh veggies in a bun", 199, "https://images.unsplash.com/photo-1550317138-10000687a72b?w=300&h=300&fit=crop", "Burgers"),
+    ("Chicken Burger", "Grilled chicken patty burger", 249, "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=300&fit=crop", "Burgers"),
+    ("Biryani", "Fragrant rice with chicken", 299, "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&h=300&fit=crop", "Rice"),
+    ("Fried Rice", "Stir-fried rice with vegetables", 199, "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=300&h=300&fit=crop", "Rice"),
+    ("Chicken Tikka Masala", "Creamy curry with chicken", 349, "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=300&h=300&fit=crop", "Curry"),
+    ("Paneer Butter Masala", "Rich paneer curry", 299, "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=300&h=300&fit=crop", "Curry"),
+    ("Tandoori Chicken", "Spiced grilled chicken", 349, "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300&h=300&fit=crop", "Grill"),
+    ("Garlic Naan", "Soft bread with garlic butter", 79, "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&h=300&fit=crop", "Bread"),
+    ("Coke", "Coca Cola 330ml", 49, "https://images.unsplash.com/photo-1561758033-7e924f619b47?w=300&h=300&fit=crop", "Beverages"),
+    ("Sprite", "Sprite 330ml", 49, "https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=300&h=300&fit=crop", "Beverages"),
+    ("Ice Cream", "Vanilla ice cream", 99, "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=300&h=300&fit=crop", "Desserts"),
+    ("Chocolate Cake", "Rich chocolate cake", 199, "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop", "Desserts"),
+    ("Samosa", "Crispy triangular pastry", 49, "https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?w=300&h=300&fit=crop", "Snacks"),
+    ("Chicken Wings", "Spicy chicken wings", 199, "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=300&h=300&fit=crop", "Snacks"),
+    ("Fish Curry", "Spiced fish in gravy", 329, "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=300&fit=crop", "Curry"),
+    ("Mutton Curry", "Tender mutton pieces", 399, "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=300&h=300&fit=crop", "Curry"),
+    ("Veggie Pasta", "Italian pasta with vegetables", 229, "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=300&h=300&fit=crop", "Pasta"),
+    ("Alfredo Pasta", "Creamy white pasta sauce", 259, "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=300&h=300&fit=crop", "Pasta"),
+
     ]
 
     c.executemany('INSERT INTO food_items (name, description, price, image_url, category) VALUES (?, ?, ?, ?, ?)', food_items)
