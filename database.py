@@ -76,7 +76,7 @@ def init_db():
     # Format: https://picsum.photos/seed/<unique_word>/300/300
     # ----------------------------------------------------------------
     food_items = [
-<<<<<<< HEAD
+
     ("Pepperoni Pizza", "Pizza with pepperoni and cheese", 349, "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=300&h=300&fit=crop", "Pizza"),
     ("Vegetarian Burger", "Fresh veggies in a bun", 199, "https://images.unsplash.com/photo-1550317138-10000687a72b?w=300&h=300&fit=crop", "Burgers"),
     ("Chicken Burger", "Grilled chicken patty burger", 249, "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=300&fit=crop", "Burgers"),
@@ -96,7 +96,7 @@ def init_db():
     ("Mutton Curry", "Tender mutton pieces", 399, "https://images.unsplash.com/photo-1574653853027-5382a3d23a15?w=300&h=300&fit=crop", "Curry"),
     ("Veggie Pasta", "Italian pasta with vegetables", 229, "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=300&h=300&fit=crop", "Pasta"),
     ("Alfredo Pasta", "Creamy white pasta sauce", 259, "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=300&h=300&fit=crop", "Pasta"),
-
+    ]
 =======
 <<<<<<< HEAD
         (
