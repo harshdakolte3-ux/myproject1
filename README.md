@@ -17,9 +17,10 @@
 
 ## 📽️ Project Demo Video
 
-> **▶️ [Click here to watch the project demo video](YOUR_VIDEO_LINK_HERE)**
->
-> *(Replace `YOUR_VIDEO_LINK_HERE` with your YouTube / Google Drive / Loom video link)*
+
+> ▶️ [Click here to watch the project demo video](https://drive.google.com/file/d/1_sFGJ9g-jMlvMKeruix1k9A9ppDS228A/view?usp=drive_link) (https://drive.google.com/file/d/1_sFGJ9g-jMlvMKeruix1k9A9ppDS228A/view?usp=drive_link)
+
+> 📁 [Project Folder (Google Drive)](https://drive.google.com/drive/folders/1NZZFmq9t6SfgjqYyfOAehw5dapTqu1Bs?usp=drive_link)
 
 <!-- If you want to embed a YouTube video thumbnail that links to the video, use this format: -->
 <!-- [![FoodHub Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID) -->
@@ -190,6 +191,7 @@ app.run(debug=True, port=5001)  # Use any available port
 - Built order placement logic and APIs
 - Implemented dark mode
 - Created HTML templates and documentation
+- Built wishlist system
 
 ### 👩‍💻 Purva Naik — Database Developer & UI Designer
 - Managed database design and queries
@@ -197,13 +199,14 @@ app.run(debug=True, port=5001)  # Use any available port
 - Worked on UI/UX and responsive design
 - Implemented CSS styling and validation
 - Tested usability
+- Built wishlist system
 
 ### 👩‍💻 Hetvi — Backend & Feature Developer
 - Implemented session management
 - Developed routing logic
-- Built wishlist system
 - Worked on APIs and search feature
 - Fixed bugs and did cross-browser testing
+-commit half templates
 
 
 ---
