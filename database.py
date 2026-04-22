@@ -76,9 +76,7 @@ def init_db():
     # no API key, no expiry, no internet restrictions on most networks)
     # Format: https://picsum.photos/seed/<unique_word>/300/300
     # ----------------------------------------------------------------
-    food_items = [
-
-    ]
+    food_items = [ ]
 
     c.executemany(
         'INSERT INTO food_items (name, description, price, image_url, category) VALUES (?, ?, ?, ?, ?)',
@@ -328,9 +326,8 @@ def is_in_wishlist(user_id, food_id):
     except Exception:
         return False
 
-
 # ----------------------------------------------------------------
-# Order functions
+# Order functionsss
 # ----------------------------------------------------------------
 
 def place_order(user_id, items, total_price, customer_name, city, mobile_number, payment_mode):
@@ -363,7 +360,6 @@ def get_orders(user_id):
         return orders
     except Exception:
         return []
-
 
 def get_order(order_id):
     try:
