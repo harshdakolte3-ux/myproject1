@@ -3,15 +3,15 @@ from database import (
     init_db, register_user, login_user, get_user, get_all_food_items,
     search_food_items, add_to_cart, remove_from_cart, update_cart_quantity,
     get_cart_items, clear_cart, add_to_wishlist, remove_from_wishlist,
-    get_wishlist, is_in_wishlist, place_order, get_orders, get_order, get_food_item
+    get_wishlist, is_in_wishlist, place_order, get_orders, get_order
 )
 import json
+import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here_change_in_production'
 
-# Initialize database on first run
-import os
+# ✅ FIXED DATABASE INIT
 if not os.path.exists('data.db'):
     init_db()
 
@@ -25,7 +25,6 @@ def index():
     if not check_login():
         return redirect(url_for('login'))
 
-    page = request.args.get('page', 1, type=int)
     items = get_all_food_items(limit=20)
     user = get_user(session['user_id'])
     return render_template('index.html', items=items, user=user)
@@ -87,19 +86,16 @@ def logout():
 @app.route('/api/add-to-cart', methods=['POST'])
 def api_add_to_cart():
     if not check_login():
-        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+        return jsonify({'success': False}), 401
 
     data = request.get_json()
     food_id = data.get('food_id')
     quantity = data.get('quantity', 1)
 
     success = add_to_cart(session['user_id'], food_id, quantity)
-    if success:
-        return jsonify({'success': True, 'message': 'Added to cart'})
-    else:
-        return jsonify({'success': False, 'message': 'Failed to add to cart'})
+    return jsonify({'success': success})
 
-# Remove from cart (AJAX)
+# Remove from cart
 @app.route('/api/remove-from-cart', methods=['POST'])
 def api_remove_from_cart():
     if not check_login():
@@ -109,12 +105,9 @@ def api_remove_from_cart():
     food_id = data.get('food_id')
 
     success = remove_from_cart(session['user_id'], food_id)
-    if success:
-        return jsonify({'success': True})
-    else:
-        return jsonify({'success': False})
+    return jsonify({'success': success})
 
-# Update cart quantity (AJAX)
+# Update cart
 @app.route('/api/update-cart-quantity', methods=['POST'])
 def api_update_cart_quantity():
     if not check_login():
@@ -125,10 +118,7 @@ def api_update_cart_quantity():
     quantity = data.get('quantity')
 
     success = update_cart_quantity(session['user_id'], food_id, quantity)
-    if success:
-        return jsonify({'success': True})
-    else:
-        return jsonify({'success': False})
+    return jsonify({'success': success})
 
 # Cart page
 @app.route('/cart')
@@ -139,46 +129,8 @@ def cart():
     items = get_cart_items(session['user_id'])
     user = get_user(session['user_id'])
     total = sum(item['price'] * item['quantity'] for item in items)
+
     return render_template('cart.html', items=items, user=user, total=total)
-
-# Add to wishlist (AJAX)
-@app.route('/api/add-to-wishlist', methods=['POST'])
-def api_add_to_wishlist():
-    if not check_login():
-        return jsonify({'success': False}), 401
-
-    data = request.get_json()
-    food_id = data.get('food_id')
-
-    success = add_to_wishlist(session['user_id'], food_id)
-    if success:
-        return jsonify({'success': True})
-    else:
-        return jsonify({'success': False})
-
-# Remove from wishlist (AJAX)
-@app.route('/api/remove-from-wishlist', methods=['POST'])
-def api_remove_from_wishlist():
-    if not check_login():
-        return jsonify({'success': False}), 401
-
-    data = request.get_json()
-    food_id = data.get('food_id')
-
-    success = remove_from_wishlist(session['user_id'], food_id)
-    if success:
-        return jsonify({'success': True})
-    else:
-        return jsonify({'success': False})
-
-# Check if in wishlist (AJAX)
-@app.route('/api/is-in-wishlist/<int:food_id>')
-def api_is_in_wishlist(food_id):
-    if not check_login():
-        return jsonify({'inWishlist': False}), 401
-
-    in_wishlist = is_in_wishlist(session['user_id'], food_id)
-    return jsonify({'inWishlist': in_wishlist})
 
 # Wishlist page
 @app.route('/wishlist')
@@ -188,9 +140,10 @@ def wishlist():
 
     items = get_wishlist(session['user_id'])
     user = get_user(session['user_id'])
+
     return render_template('wishlist.html', items=items, user=user)
 
-# Checkout page
+# Checkout
 @app.route('/checkout')
 def checkout():
     if not check_login():
@@ -202,6 +155,7 @@ def checkout():
 
     user = get_user(session['user_id'])
     total = sum(item['price'] * item['quantity'] for item in items)
+
     return render_template('checkout.html', items=items, user=user, total=total)
 
 # Place order
@@ -221,7 +175,6 @@ def place_order_route():
 
     total_price = sum(item['price'] * item['quantity'] for item in items)
 
-    # Prepare order items
     order_items = []
     for item in items:
         order_items.append({
@@ -238,29 +191,24 @@ def place_order_route():
 
     if success:
         clear_cart(session['user_id'])
-        session['last_order_id'] = order_id
         return redirect(url_for('receipt', order_id=order_id))
-    else:
-        return redirect(url_for('checkout'))
 
-# Receipt page
+    return redirect(url_for('checkout'))
+
+# Receipt
 @app.route('/receipt/<int:order_id>')
 def receipt(order_id):
     if not check_login():
         return redirect(url_for('login'))
 
     order = get_order(order_id)
-    if not order or order['user_id'] != session['user_id']:
-        return redirect(url_for('index'))
-
     user = get_user(session['user_id'])
-    try:
-        order_items = json.loads(order['items']) if order['items'] else []
-    except (json.JSONDecodeError, TypeError):
-        order_items = []
-    return render_template('receipt.html', order=order, items=order_items, user=user)
 
-# Orders page
+    items = json.loads(order['items']) if order['items'] else []
+
+    return render_template('receipt.html', order=order, items=items, user=user)
+
+# Orders
 @app.route('/orders')
 def orders():
     if not check_login():
@@ -269,17 +217,7 @@ def orders():
     user_orders = get_orders(session['user_id'])
     user = get_user(session['user_id'])
 
-    # Parse items for each order
-    parsed_orders = []
-    for order in user_orders:
-        order_dict = dict(order)
-        try:
-            order_dict['items_list'] = json.loads(order_dict['items']) if order_dict['items'] else []
-        except (json.JSONDecodeError, TypeError):
-            order_dict['items_list'] = []
-        parsed_orders.append(order_dict)
-
-    return render_template('orders.html', orders=parsed_orders, user=user)
+    return render_template('orders.html', orders=user_orders, user=user)
 
 if __name__ == '__main__':
     app.run(debug=True)
