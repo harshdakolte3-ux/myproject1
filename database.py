@@ -75,7 +75,9 @@ def init_db():
     # no API key, no expiry, no internet restrictions on most networks)
     # Format: https://picsum.photos/seed/<unique_word>/300/300
     # ----------------------------------------------------------------
-   
+    food_items = [
+
+    ]
 
     c.executemany(
         'INSERT INTO food_items (name, description, price, image_url, category) VALUES (?, ?, ?, ?, ?)',
